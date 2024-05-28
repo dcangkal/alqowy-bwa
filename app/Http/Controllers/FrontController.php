@@ -49,6 +49,9 @@ class FrontController extends Controller
 
     public function checkout(){
         $user = Auth::user();
+        if(!$user){
+            return redirect()->route('login');
+        }
         if($user->hasActiveSubcription()){
             return redirect()->route('front.index');
         }
@@ -57,7 +60,7 @@ class FrontController extends Controller
 
     public function checkoutStore(StoreSubscriptionRequest $request){
         $user = Auth::user();
-        if(!$user->hasActiveSubcription()){
+        if($user->hasActiveSubcription()){
             return redirect()->route('front.index');
         }
         DB::transaction(function () use ($request, $user){
